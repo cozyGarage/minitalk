@@ -50,3 +50,12 @@ The client encodes each character as a sequence of 8 signals (SIGUSR1 for 0, SIG
 
 # What is SA_RESTART
 `SA_RESTART` is a flag used with the `struct sigaction` in signal handling on Unix-like systems. When set, it causes certain system calls (like `read`, `write`, `pause`, etc.) that are interrupted by signals to automatically restart instead of failing with an `EINTR` error. This helps make signal handling more robust and prevents unexpected interruptions in your program’s flow.
+
+
+`sigaction(SIGUSR1, sa, NULL)` sets up how your program will handle the `SIGUSR1` signal.
+
+- It tells the operating system:  
+  “When my process receives the `SIGUSR1` signal, use the handler and options described in the `struct sigaction` pointed to by `sa`.”
+
+- This allows you to define a custom function to run when `SIGUSR1` is received, instead of using the default behavior (which usually terminates the process or does nothing).  
+- The third argument (`NULL`) means you don’t care about the previous signal handling settings.
