@@ -6,7 +6,7 @@
 /*   By: thanh-ng <thanh-ng@student.42vienna.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/10 17:50:42 by thanh-ng          #+#    #+#             */
-/*   Updated: 2025/10/14 20:47:34 by thanh-ng         ###   ########.fr       */
+/*   Updated: 2025/10/14 21:06:40 by thanh-ng         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,13 +14,8 @@
 
 static void	c_handler(int sig)
 {
-	if (sig == SIGUSR1)
+	if (sig == SIGUSR2)
 	{
-		ft_printf("\033[1;96mReceived ACK from server\033[0m\n");
-	}
-	else if (sig == SIGUSR2)
-	{
-		ft_printf("\033[1;96mReceived end of message from server\033[0m\n");
 		exit(EXIT_SUCCESS);
 	}
 }
