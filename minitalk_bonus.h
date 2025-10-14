@@ -5,51 +5,35 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: thanh-ng <thanh-ng@student.42vienna.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/10/11 15:43:47 by thanh-ng          #+#    #+#             */
-/*   Updated: 2025/10/11 16:05:55 by thanh-ng         ###   ########.fr       */
+/*   Created: 2025/10/10 17:01:22 by thanh-ng          #+#    #+#             */
+/*   Updated: 2025/10/14 20:56:18 by thanh-ng         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-
-// ======================== DEFINITIONS
 
 #ifndef MINITALK_BONUS_H
 # define MINITALK_BONUS_H
 
-# define WAIT_US  100 // usleep()
-
-// ======================== INCLUDES
+# define CHAR_BIT 8
 
 # include "libft/libft.h" // ft_atoi(), ft_strlen(), ft_putstr(), ft_putnbr()
 # include <unistd.h> // getpid(), write()
 # include <signal.h> // sigemptyset(), sigaction()
 # include <stdlib.h> // exit()
+# include <stdbool.h> // bool
 
-// ======================== PROTOTYPES
+void	exit_with_error(const char *msg);
+void	sigaction_configure(struct sigaction *sa);
+void	ping_int(pid_t pid, int nbr);
+void	ping_char(pid_t pid, char c);
+void	ft_ping(pid_t pid, char bit, int pause_flag);
+int		ft_printf(const char *format, ...); // Added for ft_printf
 
-// minitalk.c
-void	configure_sigaction_signals(struct sigaction *sa);
-void	send_int(pid_t pid, int num);
-void	send_char(pid_t pid, char c);
-void	send_bit(pid_t pid, char bit, char flag_to_pause);
-int ft_print(const char *format, ...); // Added for ft_print
-int ft_atoi(const char *str); // Added for ft_atoi
-
-// ======================== TYPEDEF and STRUCTURES
-
-/*
-  Structure to handle the protocol between server-client
-  
-  bits : bits received
-  data : data received, can be an integer (length of message) or char
-  flag : 1 if length of message was received, else 0
-  message : message received
-*/
 typedef struct s_protocol
 {
 	int		bits;
 	int		data;
-	int		flag;
-	char	*message;
+	bool	is_ready;
+	char	*str;
 }			t_protocol;
 
 #endif

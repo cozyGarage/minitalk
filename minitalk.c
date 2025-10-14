@@ -6,17 +6,18 @@
 /*   By: thanh-ng <thanh-ng@student.42vienna.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/11 15:44:42 by thanh-ng          #+#    #+#             */
-/*   Updated: 2025/10/14 18:42:27 by thanh-ng         ###   ########.fr       */
+/*   Updated: 2025/10/14 20:32:40 by thanh-ng         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minitalk.h"
 
-/*
-  Function sets the signals to be caught by the custom handler.
-  In case this action fails, prints to stdout an error message and exits the
-  program
-*/
+void	exit_with_error(const char *msg)
+{
+	ft_printf("%s\n", msg);
+	exit(EXIT_FAILURE);
+}
+
 void	sigaction_configure(struct sigaction *sa)
 {
 	if (sigaction(SIGUSR1, sa, NULL) < 0)
@@ -25,45 +26,46 @@ void	sigaction_configure(struct sigaction *sa)
 		exit_with_error("SIGUSR2 is invalid");
 }
 
-/*
-  Functions sends an integer containing the length of the message
-  For each bit sent client, waits a signal received back before proceeding
-  by using flag = 1 on the send_bit()
-  Assumed 1 byte = 8 bits
-*/
-void send_int(pid_t pid, int num)
+void	ping_int(pid_t pid, int nbr)
 {
-    send_bits(pid, (unsigned long)num, sizeof(int) * CHAR_BIT);
+	int		shift;
+	char	bit;
+
+	shift = (sizeof(int) * CHAR_BIT) - 1;
+	while (shift >= 0)
+	{
+		bit = (nbr >> shift) & 1;
+		ft_ping(pid, bit, 1);
+		shift--;
+	}
 }
 
-void send_char(pid_t pid, char c)
+void	ping_char(pid_t pid, char c)
 {
-    send_bits(pid, (unsigned long)c, CHAR_BIT);
+	int		shift;
+	char	bit;
+
+	shift = (sizeof(char) * CHAR_BIT) - 1;
+	while (shift >= 0)
+	{
+		bit = (c >> shift) & 1;
+		ft_ping(pid, bit, 1);
+		shift--;
+	}
 }
 
-/*
-  Function sends a bit (0 or 1) to the process PID
-  Return from function will happen after ACK signal is received in case
-  the wait flag is set to non zero, otherwise return immediately
-*/
-void	send_bit(pid_t pid, char bit, char flag_to_pause)
+void	ft_ping(pid_t pid, char bit, int pause_flag)
 {
-	int sig = (bit == 0) ? SIGUSR1 : SIGUSR2;
-
-	if (kill(pid, sig) < 0)
-		exit_with_error("Error: sending signal");
-	if (flag_to_pause)
+	if (bit == 0)
+	{
+		if (kill(pid, SIGUSR1) < 0)
+			exit_with_error("Error: sending SIGUSR1");
+	}
+	else if (bit == 1)
+	{
+		if (kill(pid, SIGUSR2) < 0)
+			exit_with_error("Error: sending SIGUSR2");
+	}
+	if (pause_flag != 0)
 		pause();
-}
-
-void	send_bits(pid_t pid, unsigned long value, int bit_count)
-{
-    int shift = bit_count - 1;
-    char bit;
-    while (shift >= 0)
-    {
-        bit = (value >> shift) & 1;
-        send_bit(pid, bit, 1);
-        shift--;
-    }
 }

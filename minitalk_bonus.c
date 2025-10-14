@@ -1,103 +1,71 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   minitalk_bonus.c                                   :+:      :+:    :+:   */
+/*   minitalk.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: thanh-ng <thanh-ng@student.42vienna.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/10/11 15:44:52 by thanh-ng          #+#    #+#             */
-/*   Updated: 2025/10/11 16:02:20 by thanh-ng         ###   ########.fr       */
+/*   Created: 2025/10/11 15:44:42 by thanh-ng          #+#    #+#             */
+/*   Updated: 2025/10/14 20:32:40 by thanh-ng         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minitalk_bonus.h"
+#include "minitalk.h"
 
-/*
-  Function sets the signals to be caught by the custom handler.
-  In case this action fails, prints to stdout an error message and exits the
-  program
-*/
-void	configure_sigaction_signals(struct sigaction *sa)
+void	exit_with_error(const char *msg)
 {
-	if (sigaction(SIGUSR1, sa, NULL) < 0)
-	{
-		ft_putstr_fd("\e[31m## error - could not setup SIGUSR1 ##\n\e[0m",
-			STDOUT_FILENO);
-		exit(EXIT_FAILURE);
-	}
-	if (sigaction(SIGUSR2, sa, NULL) < 0)
-	{
-		ft_putstr_fd("\e[31m## error - could not setup SIGUSR2 ##\n\e[0m",
-			STDOUT_FILENO);
-		exit(EXIT_FAILURE);
-	}
+	ft_printf("%s\n", msg);
+	exit(EXIT_FAILURE);
 }
 
-/*
-  Functions sends an integer containing the length of the message
-  For each bit sent client, waits a signal received back before proceeding
-  by using flag = 1 on the send_bit()
-  Assumed 1 byte = 8 bits
-*/
-void	send_int(pid_t pid, int num)
+void	sigaction_configure(struct sigaction *sa)
+{
+	if (sigaction(SIGUSR1, sa, NULL) < 0)
+		exit_with_error("SIGUSR1 is invalid");
+	if (sigaction(SIGUSR2, sa, NULL) < 0)
+		exit_with_error("SIGUSR2 is invalid");
+}
+
+void	ping_int(pid_t pid, int nbr)
 {
 	int		shift;
 	char	bit;
 
-	shift = (sizeof(int) * 8) - 1;
+	shift = (sizeof(int) * CHAR_BIT) - 1;
 	while (shift >= 0)
 	{
-		bit = (num >> shift) & 1;
-		send_bit(pid, bit, 1);
+		bit = (nbr >> shift) & 1;
+		ft_ping(pid, bit, 1);
 		shift--;
 	}
 }
 
-/*
-  Function sends 1 char, that normally is an octet (8 bits)
-  For each bit sent client, waits a signal received back before proceeding
-  by using flag = 1 on the send_bit()
-  Assumed 1 byte = 8 bits
-*/
-void	send_char(pid_t pid, char c)
+void	ping_char(pid_t pid, char c)
 {
 	int		shift;
 	char	bit;
 
-	shift = (sizeof(char) * 8) - 1;
+	shift = (sizeof(char) * CHAR_BIT) - 1;
 	while (shift >= 0)
 	{
 		bit = (c >> shift) & 1;
-		send_bit(pid, bit, 1);
+		ft_ping(pid, bit, 1);
 		shift--;
 	}
 }
 
-/*
-  Function sends a bit (0 or 1) to the process PID
-  Return from function will happen after ACK signal is received in case
-  the wait flag is set to non zero, otherwise return immediately
-*/
-void	send_bit(pid_t pid, char bit, char flag_to_pause)
+void	ft_ping(pid_t pid, char bit, int pause_flag)
 {
 	if (bit == 0)
 	{
 		if (kill(pid, SIGUSR1) < 0)
-		{
-			ft_putstr_fd("\e[31m## error - sending SIGUSR1 ##\n\e[0m",
-				STDOUT_FILENO);
-			exit(EXIT_FAILURE);
-		}
+			exit_with_error("Error: sending SIGUSR1");
 	}
 	else if (bit == 1)
 	{
 		if (kill(pid, SIGUSR2) < 0)
-		{
-			ft_putstr_fd("\e[31m## error - sending SIGUSR2 ##\n\e[0m",
-				STDOUT_FILENO);
-			exit(EXIT_FAILURE);
-		}
+			exit_with_error("Error: sending SIGUSR2");
 	}
-	if (flag_to_pause != 0)
+	if (pause_flag != 0)
 		pause();
 }
