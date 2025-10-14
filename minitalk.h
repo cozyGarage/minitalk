@@ -6,7 +6,7 @@
 /*   By: thanh-ng <thanh-ng@student.42vienna.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/10 17:01:22 by thanh-ng          #+#    #+#             */
-/*   Updated: 2025/10/13 22:19:39 by thanh-ng         ###   ########.fr       */
+/*   Updated: 2025/10/14 18:44:42 by thanh-ng         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,7 @@ void	sigaction_configure(struct sigaction *sa);
 void	send_int(pid_t pid, int num);
 void	send_char(pid_t pid, char c);
 void	send_bit(pid_t pid, char bit, char flag_to_pause);
-void	send_bits(pid_t pid, unsigned long bits, size_t nbits);
+void	send_bits(pid_t pid, unsigned long value, int bit_count);
 
 // Printf and atoi
 int ft_printf(const char *format, ...); // Added for ft_printf
