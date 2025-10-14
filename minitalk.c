@@ -6,17 +6,11 @@
 /*   By: thanh-ng <thanh-ng@student.42vienna.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/11 15:44:42 by thanh-ng          #+#    #+#             */
-/*   Updated: 2025/10/13 22:09:23 by thanh-ng         ###   ########.fr       */
+/*   Updated: 2025/10/14 18:42:27 by thanh-ng         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minitalk.h"
-
-void	exit_with_error(const char *msg)
-{
-	ft_printf("%s\n", msg);
-	exit(EXIT_FAILURE);
-}
 
 /*
   Function sets the signals to be caught by the custom handler.

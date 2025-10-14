@@ -6,13 +6,19 @@
 /*   By: thanh-ng <thanh-ng@student.42vienna.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/10 17:50:42 by thanh-ng          #+#    #+#             */
-/*   Updated: 2025/10/13 22:22:07 by thanh-ng         ###   ########.fr       */
+/*   Updated: 2025/10/14 18:43:37 by thanh-ng         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minitalk.h"
 
 static char g_last_char;
+
+void	exit_with_error(const char *msg)
+{
+	ft_printf("%s\n", msg);
+	exit(EXIT_FAILURE);
+}
 
 static void	c_handler(int sig)
 {
