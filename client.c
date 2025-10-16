@@ -6,7 +6,7 @@
 /*   By: thanh-ng <thanh-ng@student.42vienna.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/10 17:50:42 by thanh-ng          #+#    #+#             */
-/*   Updated: 2025/10/14 21:06:40 by thanh-ng         ###   ########.fr       */
+/*   Updated: 2025/10/14 21:11:12 by thanh-ng         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,16 +25,9 @@ static void	send_package(int server_pid, char *str)
 	int		i;
 
 	i = 0;
-	ft_printf("\033[1;33mSending length = [%d]\033[0m\n", ft_strlen(str));
 	ping_int(server_pid, ft_strlen(str));
-	ft_printf("\033[1;33mSending message\033[0m\n");
 	while (str[i] != '\0')
-	{
-		ft_printf("\033[1;33mSending char [%c]\033[0m\n", str[i]);
-		ping_char(server_pid, str[i]);
-		i++;
-	}
-	ft_printf("\033[1;33mSending null terminator\033[0m\n");
+		ping_char(server_pid, str[i++]);
 	ping_char(server_pid, '\0');
 }
 
